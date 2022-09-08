@@ -7,13 +7,13 @@ import (
 )
 
 type User struct {
-	ID              primitive.ObjectID `bson:'_id'`
-	First_Name      *string
-	Last_Name       *string
-	Password        *string
-	Email           *string
-	Phone           *string
-	Token           *string
+	ID              primitive.ObjectID `json:"_id" bson:"_id"`
+	First_Name      *string            `json:"first_name"`
+	Last_Name       *string            `json:"last_name"`
+	Password        *string            `json:"password"`
+	Email           *string            `json:"email"`
+	Phone           *string            `json:"phone"`
+	Token           *string            ``
 	Refresh_Token   *string
 	Created_At      time.Time
 	Updated_At      time.Time
