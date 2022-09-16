@@ -104,7 +104,30 @@ func SignUp() gin.HandlerFunc {
 }
 
 func Login() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// create the context
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		defer cancel()
 
+		// initialize a user object
+		var user models.User
+		// initialize a found user object
+		var foundUser models.User
+
+		// bind the request body to the user object
+		if err := c.BindJSON(&user); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err})
+			return
+		}
+
+		err := userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
+
+		defer cancel()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "login or password is incorrect"})
+			return
+		}
+	}
 }
 
 func ProductViewerAdmin() gin.HandlerFunc {
