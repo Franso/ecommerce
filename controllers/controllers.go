@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -127,6 +128,20 @@ func Login() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "login or password is incorrect"})
 			return
 		}
+
+		PasswordIsValid, msg := VerifyPassword(*user.Password, *foundUser.Password)
+		defer cancel()
+
+		if !PasswordIsValid {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			fmt.Println(msg)
+			return
+		}
+		token, refreshToken, _ := generate.TokenGenerator(*&foundUser.Email, *&foundUser.First_Name, *&foundUser.Last_Name, *&foundUser.User_ID)
+		defer cancel()
+
+		generate.UpdateAllTokens(token, refreshToken, foundUser.User_ID)
+		c.JSON(http.StatusFound, foundUser)
 	}
 }
 
