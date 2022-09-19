@@ -112,7 +112,8 @@ func Login() gin.HandlerFunc {
 
 		// initialize a user object
 		var user models.User
-		// initialize a found user object
+		// initialize a found user object to store what record we find in the DB
+		// we shall use ths to compare with what the user inputs
 		var foundUser models.User
 
 		// bind the request body to the user object
