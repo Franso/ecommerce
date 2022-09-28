@@ -122,9 +122,10 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
+		// find saved user and store that in found user
 		err := userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
-
 		defer cancel()
+
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "login or password is incorrect"})
 			return
